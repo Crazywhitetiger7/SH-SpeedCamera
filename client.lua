@@ -1,4 +1,4 @@
-hasBeenCaught = false
+local hasBeenCaught = false
 CreateThread(function()
     while true do
         Wait(0)
