@@ -7,26 +7,28 @@ CreateThread(function()
             local playerPed = PlayerPedId()
             local PlyCoords = GetEntityCoords(playerPed, false)
             local dist = #(PlyCoords - info.Coords)
-            local street1 = GetStreetNameAtCoord(PlyCoords.x, PlyCoords.y, PlyCoords.z)
-            local streetName = GetStreetNameFromHashKey(street1)
             local playerCar = GetVehiclePedIsIn(playerPed, false)
-            local Plate = GetVehicleNumberPlateText(playerCar)
             local SpeedType = GetEntitySpeed(playerPed)*3.6
 
-            if Config.SpeedTypeMPH then
+            if Config.SPEED_TYPE_MPH then
                 SpeedType = GetEntitySpeed(playerCar)*2.236936
             end
 
-            if dist <= 20.0 then
+            if Config.BLACK_LISTED_VEHICLES[GetDisplayNameFromVehicleModel(GetEntityModel(playerCar))] then
+                Wait(500)
+                goto policeskip
+            end
+
+            if dist <= 20.0 then            
                 if SpeedType > info.MaxSpeed and SpeedType > info.AlertSpeed then
                     if not hasBeenCaught then
 
-                        if Config.PoliceNotfiy then
-                            TriggerServerEvent('SH-SpeedCamera:PolicePing', PlyCoords, Plate)
+                        if Config.POLICE_NOTIFY then
+                            TriggerServerEvent('SH-SpeedCamera:PolicePing', PlyCoords, GetVehicleNumberPlateText(playerCar))
                         end
                     
                         if GetPedInVehicleSeat(playerCar, -1) then
-                            if Config.useCameraSound then
+                            if Config.USE_CAMERA_SOUND then
                                 TriggerServerEvent("InteractSound_SV:PlayOnSource", "speedcamera", 0.5)
                             end
                             
@@ -40,9 +42,28 @@ CreateThread(function()
                         Wait(5000) 
                     end
                 end
-            else
-                Wait(1000)
+            else 
+                Wait(250)
             end
+            ::policeskip::
+        end
+    end
+end)
+
+
+CreateThread(function()
+    for i=1, #Config.SPEED_CAMERA do
+        local BlipInfo = Config.SPEED_CAMERA[i]
+        if BlipInfo.UseBlip then
+            BlipInfo.blip = AddBlipForCoord(BlipInfo.Coords.xyz)
+            SetBlipSprite(BlipInfo.blip, 184)
+            SetBlipDisplay(BlipInfo.blip, 4)
+            SetBlipScale(BlipInfo.blip, 0.5)
+            SetBlipColour(BlipInfo.blip, 1)
+            SetBlipAsShortRange(BlipInfo.blip, true)
+            BeginTextCommandSetBlipName("STRING")
+            AddTextComponentString('Speed Camera '..BlipInfo.SpeedLimit)
+            EndTextCommandSetBlipName(BlipInfo.blip)
         end
     end
 end)
