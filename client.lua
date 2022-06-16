@@ -16,7 +16,7 @@ CreateThread(function()
 
             if Config.BLACK_LISTED_VEHICLES[GetDisplayNameFromVehicleModel(GetEntityModel(playerCar))] then
                 Wait(500)
-                goto policeskip
+                goto BLACK_LISTED_VEHICLES_SKIP
             end
 
             if dist <= 20.0 then            
@@ -45,7 +45,7 @@ CreateThread(function()
             else 
                 Wait(250)
             end
-            ::policeskip::
+            ::BLACK_LISTED_VEHICLES_SKIP::
         end
     end
 end)
