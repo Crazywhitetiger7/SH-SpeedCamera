@@ -1,7 +1,7 @@
 RegisterServerEvent('SH-SpeedCamera:BillPlayer')
-AddEventHandler('SH-SpeedCamera:BillPlayer', function(CamID)
+AddEventHandler('SH-SpeedCamera:BillPlayer', function(BillAmount)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	xPlayer.removeMoney(Config.SPEED_CAMERA[CamID].BillAmount)
+	xPlayer.removeMoney(BillAmount)
 end)
 
 RegisterServerEvent('SH-SpeedCamera:PolicePing')
