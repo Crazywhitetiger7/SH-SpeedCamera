@@ -33,7 +33,7 @@ CreateThread(function()
                             end
                             
                             exports['mythic_notify']:DoLongHudText('inform', 'You have been fined $'.. info.BillAmount.. ' for exceeding speed limit, Speed Limit: ' ..info.SpeedLimit.. ' your speed: '..math.floor(SpeedType))
-                            TriggerServerEvent('SH-SpeedCamera:BillPlayer', info)
+                            TriggerServerEvent('SH-SpeedCamera:BillPlayer', info.BillAmount)
 
                             hasBeenCaught = true
                             Wait(5000)
